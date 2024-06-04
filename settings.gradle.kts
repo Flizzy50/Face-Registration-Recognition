@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Face Reg & Reg"
+rootProject.name = "Face Reg & Rec"
 include(":app")

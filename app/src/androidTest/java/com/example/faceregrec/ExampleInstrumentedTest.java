@@ -1,4 +1,4 @@
-package com.example.faceregreg;
+package com.example.faceregrec;
 
 import android.content.Context;
 

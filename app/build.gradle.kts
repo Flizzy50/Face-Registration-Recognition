@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.faceregreg"
+    namespace = "com.example.faceregrec"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.faceregreg"
+        applicationId = "com.example.faceregrec"
         minSdk = 28
         targetSdk = 34
         versionCode = 1
