@@ -2,6 +2,7 @@ package com.example.faceregrec;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -46,8 +47,9 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     if(result.getResultCode() == RESULT_OK) {
-                        Uri imageUri = result.getData().getData();
-                        imageView.setImageURI(imageUri);
+                        Bundle extras = result.getData().getExtras();
+                        Bitmap imageBitmap = (Bitmap) extras.get("data");
+                        imageView.setImageBitmap(imageBitmap);
                     }
                 }
             });
