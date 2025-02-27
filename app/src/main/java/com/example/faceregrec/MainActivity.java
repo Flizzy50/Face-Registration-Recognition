@@ -42,58 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_REGISTER = 1;
     private static final int REQUEST_RECOGNIZE = 2;
     private static final int CAMERA_PIC_REQUEST = 1337;
-    ImageView imageView;
     Button registerButton, recognizeButton;
-    String currentPhotoPath;
-    Uri imageUri;
-
-    //creates a temporary file for the image to be stored
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
-
-    //takes URI of the image and returns bitmap
-    private Bitmap uriToBitmap(Uri selectedFileUri) {
-        try {
-            ParcelFileDescriptor parcelFileDescriptor =
-                    getContentResolver().openFileDescriptor(selectedFileUri, "r");
-            FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
-            Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
-            parcelFileDescriptor.close();
-            return image;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return  null;
-    }
-
-    //rotate image if image captured is rotated by system 90 degrees
-    @SuppressLint("Range")
-    public Bitmap rotateBitmap(Bitmap input, Uri image_uri) {
-        String[] orientationColumn = {MediaStore.Images.Media.ORIENTATION};
-        Cursor cur = getContentResolver().query(image_uri, orientationColumn, null, null, null);
-        int orientation = -1;
-        if (cur != null && cur.moveToFirst()) {
-            orientation = cur.getInt(cur.getColumnIndex(orientationColumn[0]));
-        }
-        Log.d("tryOrientation",orientation+"");
-        Matrix rotationMatrix = new Matrix();
-        rotationMatrix.setRotate(orientation);
-        Bitmap cropped = Bitmap.createBitmap(input,0,0, input.getWidth(), input.getHeight(), rotationMatrix, true);
-        return cropped;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,7 +81,5 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_RECOGNIZE);
             }
         });
-
-        Intent cameraOpen = new Intent("android.media.action.IMAGE_CAPTURE");
     }
 }
