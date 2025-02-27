@@ -48,7 +48,9 @@ public class RecognizeActivity extends AppCompatActivity {
                 public void onActivityResult(ActivityResult result) {
                     if (result.getResultCode() == RESULT_OK) {
                         Uri image_uri = result.getData().getData();
-                        imageView.setImageURI(image_uri);
+                        Bitmap inputImage = uriToBitmap(image_uri);
+                        Bitmap rotated = rotateBitmap(inputImage, image_uri);
+                        imageView.setImageBitmap(rotated);
                     }
                 }
             });
