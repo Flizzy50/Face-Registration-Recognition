@@ -24,6 +24,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
+import com.google.mlkit.vision.face.FaceDetection;
+import com.google.mlkit.vision.face.FaceDetector;
+import com.google.mlkit.vision.face.FaceDetectorOptions;
+
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -39,6 +43,16 @@ public class RegisterActivity extends AppCompatActivity {
     Button galleryButton, cameraButton;
 
     ImageView imageView;
+
+    // High-accuracy landmark detection and face classification
+    FaceDetectorOptions highAccuracyOpts =
+            new FaceDetectorOptions.Builder()
+                    .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
+                    .setLandmarkMode(FaceDetectorOptions.LANDMARK_MODE_ALL)
+                    .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_NONE)
+                    .build();
+
+    FaceDetector detector;
 
     //Gets the image from gallery and displays it
     ActivityResultLauncher<Intent> galleryActivityResultLauncher = registerForActivityResult(
@@ -126,6 +140,8 @@ public class RegisterActivity extends AppCompatActivity {
         imageView = findViewById(R.id.imageView);
         galleryButton = findViewById(R.id.galleryButton);
         cameraButton = findViewById(R.id.cameraButton);
+
+        detector = FaceDetection.getClient(highAccuracyOpts);
 
         galleryButton.setOnClickListener(new View.OnClickListener() {
             @Override
