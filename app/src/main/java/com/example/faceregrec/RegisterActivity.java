@@ -91,38 +91,6 @@ public class RegisterActivity extends AppCompatActivity {
                                 });
     }
 
-    //Gets the image from gallery, displays it and calls performFaceDetection()
-    ActivityResultLauncher<Intent> galleryActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == RESULT_OK) {
-                        Uri image_uri = result.getData().getData();
-                        Bitmap inputImage = uriToBitmap(image_uri);
-                        Bitmap rotated = rotateBitmap(inputImage, image_uri);
-                        imageView.setImageBitmap(rotated);
-                        performFaceDetection(rotated);
-                    }
-                }
-            });
-    //gets the image from camera, displays it and calls performFaceDetection() method
-    ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == RESULT_OK) {
-                        File file = new File(currentPhotoPath);
-                        Uri image_uri = Uri.fromFile(file);
-                        Bitmap inputImage = uriToBitmap(image_uri);
-                        Bitmap rotated = rotateBitmap(inputImage, image_uri);
-                        imageView.setImageBitmap(rotated);
-                        performFaceDetection(rotated);
-                    }
-                }
-            });
-
     //creates a temporary file for the image to be stored
     private File createImageFile() throws IOException {
         // Create an image file name
@@ -170,6 +138,39 @@ public class RegisterActivity extends AppCompatActivity {
         Bitmap cropped = Bitmap.createBitmap(input, 0, 0, input.getWidth(), input.getHeight(), rotationMatrix, true);
         return cropped;
     }
+
+    //Gets the image from gallery, displays it and calls performFaceDetection()
+    ActivityResultLauncher<Intent> galleryActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == RESULT_OK) {
+                        Uri image_uri = result.getData().getData();
+                        Bitmap inputImage = uriToBitmap(image_uri);
+                        Bitmap rotated = rotateBitmap(inputImage, image_uri);
+                        imageView.setImageBitmap(rotated);
+                        performFaceDetection(rotated);
+                    }
+                }
+            });
+
+    //gets the image from camera, displays it and calls performFaceDetection() method
+    ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == RESULT_OK) {
+                        File file = new File(currentPhotoPath);
+                        Uri image_uri = Uri.fromFile(file);
+                        Bitmap inputImage = uriToBitmap(image_uri);
+                        Bitmap rotated = rotateBitmap(inputImage, image_uri);
+                        imageView.setImageBitmap(rotated);
+                        performFaceDetection(rotated);
+                    }
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
