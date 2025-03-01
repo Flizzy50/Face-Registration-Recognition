@@ -20,10 +20,16 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.mlkit.vision.common.InputImage;
+import com.google.mlkit.vision.face.Face;
 import com.google.mlkit.vision.face.FaceDetection;
 import com.google.mlkit.vision.face.FaceDetector;
 import com.google.mlkit.vision.face.FaceDetectorOptions;
@@ -33,6 +39,7 @@ import java.io.FileDescriptor;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -54,7 +61,29 @@ public class RegisterActivity extends AppCompatActivity {
 
     FaceDetector detector;
 
-    //Gets the image from gallery and displays it
+    public void performFaceDetection(Bitmap input){
+        InputImage image = InputImage.fromBitmap(input, 0);
+        Task<List<Face>> result =
+                detector.process(image)
+                        .addOnSuccessListener(
+                                new OnSuccessListener<List<Face>>() {
+                                    @Override
+                                    public void onSuccess(List<Face> faces) {
+                                        // Task completed successfully
+                                        // ...
+                                    }
+                                })
+                        .addOnFailureListener(
+                                new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // Task failed with an exception
+                                        // ...
+                                    }
+                                });
+    }
+
+    //Gets the image from gallery, displays it and calls performFaceDetection()
     ActivityResultLauncher<Intent> galleryActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -65,10 +94,11 @@ public class RegisterActivity extends AppCompatActivity {
                         Bitmap inputImage = uriToBitmap(image_uri);
                         Bitmap rotated = rotateBitmap(inputImage, image_uri);
                         imageView.setImageBitmap(rotated);
+                        performFaceDetection(rotated);
                     }
                 }
             });
-    //gets the image from camera and displays it
+    //gets the image from camera, displays it and calls performFaceDetection() method
     ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -80,6 +110,7 @@ public class RegisterActivity extends AppCompatActivity {
                         Bitmap inputImage = uriToBitmap(image_uri);
                         Bitmap rotated = rotateBitmap(inputImage, image_uri);
                         imageView.setImageBitmap(rotated);
+                        performFaceDetection(rotated);
                     }
                 }
             });
