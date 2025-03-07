@@ -67,7 +67,6 @@ public class RegisterActivity extends AppCompatActivity {
                     .build();
 
     FaceDetector detector;
-
     public void performFaceDetection(Bitmap input){
         Bitmap mutableBmp = input.copy(Bitmap.Config.ARGB_8888, true);
         Canvas canvas = new Canvas(mutableBmp);
@@ -87,9 +86,10 @@ public class RegisterActivity extends AppCompatActivity {
                                             p1.setStyle(Paint.Style.STROKE);
                                             p1.setStrokeWidth(5);
                                             p1.setColor(Color.RED);
+                                            performFaceRecognition(bounds, input);
                                             canvas.drawRect(bounds, p1);
                                         }
-                                        imageView.setImageBitmap(mutableBmp);
+                                        //imageView.setImageBitmap(mutableBmp);
                                     }
                                 })
                         .addOnFailureListener(
@@ -100,6 +100,23 @@ public class RegisterActivity extends AppCompatActivity {
                                         // ...
                                     }
                                 });
+    }
+
+    public void performFaceRecognition(Rect bound, Bitmap input){
+        if(bound.top < 0){
+            bound.top = 0;
+        }
+        if(bound.left < 0){
+            bound.left = 0;
+        }
+        if(bound.right > input.getWidth()){
+            bound.right = input.getWidth();
+        }
+        if(bound.bottom > input.getHeight()){
+            bound.bottom = input.getHeight();
+        }
+        Bitmap croppedFace = Bitmap.createBitmap(input, bound.left, bound.top, bound.width(), bound.height());
+        imageView.setImageBitmap(croppedFace);
     }
 
     //creates a temporary file for the image to be stored
