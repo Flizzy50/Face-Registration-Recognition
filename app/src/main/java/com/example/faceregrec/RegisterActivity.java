@@ -79,7 +79,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     public void onSuccess(List<Face> faces) {
                                         // Task completed successfully
                                         // ...
-                                        Log.d("tryFace", "Length = "+faces.size());
+                                        Log.d("tryFace", "Face Count = "+faces.size());
                                         for (Face face : faces) {
                                             Rect bounds = face.getBoundingBox();
                                             Paint p1 = new Paint();
