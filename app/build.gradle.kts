@@ -1,3 +1,6 @@
+import com.android.build.api.dsl.AaptOptions
+import com.android.build.api.dsl.AndroidResources
+
 plugins {
     alias(libs.plugins.androidApplication)
 }
@@ -29,10 +32,15 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
+    fun AndroidResources.() {
+        noCompress += "tflite"
+        noCompress += "lite"
+    }
+ androidResources
 }
 
 dependencies {
-
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -42,4 +50,5 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
 
     implementation("com.google.mlkit:face-detection:16.1.7")
+    implementation("org.tensorflow:tensorflow-lite:2.6.0")
 }
