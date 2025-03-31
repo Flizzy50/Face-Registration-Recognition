@@ -30,6 +30,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
+import com.example.faceregrec.FaceRecognitionFiles.FaceClassifier;
+import com.example.faceregrec.FaceRecognitionFiles.TFLiteFaceRecognition;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -67,6 +69,11 @@ public class RegisterActivity extends AppCompatActivity {
                     .build();
 
     FaceDetector detector;
+
+
+    FaceClassifier classifier;
+
+
     public void performFaceDetection(Bitmap input){
         Bitmap mutableBmp = input.copy(Bitmap.Config.ARGB_8888, true);
         Canvas canvas = new Canvas(mutableBmp);
@@ -240,6 +247,15 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+
+        detector = FaceDetection.getClient(highAccuracyOpts);
+
+        try {
+            classifier = TFLiteFaceRecognition.create(getAssets(), "facenet.tflite", 160, false);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
