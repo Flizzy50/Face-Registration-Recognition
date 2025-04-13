@@ -1,0 +1,61 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:padding="16dp">
+
+    <!-- Title -->
+
+    <!-- ImageView -->
+
+    <!-- Enter Name EditText -->
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="211dp"
+        android:layout_height="52dp"
+        android:gravity="center"
+        android:text="Registration"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/dialogImage"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/dialogImage"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/dialogImage"
+        android:layout_width="211dp"
+        android:layout_height="232dp"
+        android:scaleType="centerCrop"
+        android:src="@color/design_default_color_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
+
+    <!-- Register Button -->
+
+    <EditText
+        android:id="@+id/dialogNameInput"
+        android:layout_width="211dp"
+        android:layout_height="57dp"
+        android:hint="Enter Name"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/dialogImage"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/dialogImage"
+        app:layout_constraintTop_toBottomOf="@+id/dialogImage" />
+
+    <Button
+        android:id="@+id/dialogRegisterButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Register"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/dialogImage"
+        app:layout_constraintStart_toStartOf="@+id/dialogImage"
+        app:layout_constraintTop_toBottomOf="@+id/dialogNameInput" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
