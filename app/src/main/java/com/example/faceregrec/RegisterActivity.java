@@ -106,6 +106,7 @@ public class RegisterActivity extends AppCompatActivity {
                                         // ...
                                     }
                                 });
+        imageView.setImageBitmap(mutableBmp);
     }
 
     public void performFaceRecognition(Rect bound, Bitmap input){
@@ -122,7 +123,7 @@ public class RegisterActivity extends AppCompatActivity {
             bound.bottom = input.getHeight();
         }
         Bitmap croppedFace = Bitmap.createBitmap(input, bound.left, bound.top, bound.width(), bound.height());
-        imageView.setImageBitmap(croppedFace);
+        //imageView.setImageBitmap(croppedFace);
         croppedFace = Bitmap.createScaledBitmap(croppedFace, 160, 160, false);
         FaceClassifier.Recognition recognition = classifier.recognizeImage(croppedFace, true);
         showRegisterDialogue(croppedFace, recognition);
