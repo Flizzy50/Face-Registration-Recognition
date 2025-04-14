@@ -1,6 +1,7 @@
 package com.example.faceregrec;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -9,7 +10,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.PointF;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,14 +19,15 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
@@ -37,11 +38,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.face.Face;
-import com.google.mlkit.vision.face.FaceContour;
 import com.google.mlkit.vision.face.FaceDetection;
 import com.google.mlkit.vision.face.FaceDetector;
 import com.google.mlkit.vision.face.FaceDetectorOptions;
-import com.google.mlkit.vision.face.FaceLandmark;
 
 import java.io.File;
 import java.io.FileDescriptor;
@@ -124,6 +123,9 @@ public class RegisterActivity extends AppCompatActivity {
         }
         Bitmap croppedFace = Bitmap.createBitmap(input, bound.left, bound.top, bound.width(), bound.height());
         imageView.setImageBitmap(croppedFace);
+        croppedFace = Bitmap.createScaledBitmap(croppedFace, 160, 160, false);
+        FaceClassifier.Recognition recognition = classifier.recognizeImage(croppedFace, true);
+        showRegisterDialogue(croppedFace, recognition);
     }
 
     //creates a temporary file for the image to be stored
@@ -172,6 +174,30 @@ public class RegisterActivity extends AppCompatActivity {
         rotationMatrix.setRotate(orientation);
         Bitmap cropped = Bitmap.createBitmap(input, 0, 0, input.getWidth(), input.getHeight(), rotationMatrix, true);
         return cropped;
+    }
+
+    public void showRegisterDialogue(Bitmap face, FaceClassifier.Recognition recognition) {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.register_face_dialogue);
+        ImageView dialogImage = dialog.findViewById(R.id.dialogImage);
+        EditText dialogNameInput = dialog.findViewById(R.id.dialogNameInput);
+        Button dialogRegisterButton = dialog.findViewById(R.id.dialogRegisterButton);
+        dialogImage.setImageBitmap(face);
+        dialogRegisterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = dialogNameInput.getText().toString();
+                if (name.isEmpty()) {
+                    dialogNameInput.setError("Enter name");
+                } else {
+                    classifier.register(name, recognition);
+                    Toast.makeText(RegisterActivity.this, "Face Registered " + name, Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                }
+            }
+        }
+        );
+        dialog.show();
     }
 
     //Gets the image from gallery, displays it and calls performFaceDetection()
@@ -255,26 +281,6 @@ public class RegisterActivity extends AppCompatActivity {
         }
         catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            Uri imageUri = null;
-            if (requestCode == GALLERY_REQUEST && data != null) {
-                imageUri = data.getData();
-            } else if (requestCode == CAMERA_REQUEST) {
-                File file = new File(currentPhotoPath);
-                imageUri = Uri.fromFile(file);
-            }
-            if (imageUri != null) {
-                Intent resultIntent = new Intent();
-                resultIntent.setData(imageUri);
-                setResult(RESULT_OK, resultIntent);
-                finish();
-            }
         }
     }
 }
