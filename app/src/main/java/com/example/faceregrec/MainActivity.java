@@ -30,11 +30,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.faceregrec.FaceRecognitionFiles.FaceClassifier;
+
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -42,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_REGISTER = 1;
     private static final int REQUEST_RECOGNIZE = 2;
     private static final int CAMERA_PIC_REQUEST = 1337;
+
+    public static HashMap<String, FaceClassifier.Recognition> registered = new HashMap<>();
     Button registerButton, recognizeButton;
 
     @Override
