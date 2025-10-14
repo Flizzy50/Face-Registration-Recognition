@@ -73,10 +73,10 @@ public class RecognizeActivity extends AppCompatActivity {
 
     FaceClassifier classifier;
 
-
+    Canvas canvas;
     public void performFaceDetection(Bitmap input){
         Bitmap mutableBmp = input.copy(Bitmap.Config.ARGB_8888, true);
-        Canvas canvas = new Canvas(mutableBmp);
+        canvas = new Canvas(mutableBmp);
         InputImage image = InputImage.fromBitmap(input, 0);
         Task<List<Face>> result =
                 detector.process(image)
@@ -96,7 +96,7 @@ public class RecognizeActivity extends AppCompatActivity {
                                             performFaceRecognition(bounds, input);
                                             canvas.drawRect(bounds, p1);
                                         }
-                                        //imageView.setImageBitmap(mutableBmp);
+                                        imageView.setImageBitmap(mutableBmp);
                                     }
                                 })
                         .addOnFailureListener(
@@ -127,7 +127,16 @@ public class RecognizeActivity extends AppCompatActivity {
         //imageView.setImageBitmap(croppedFace);
         croppedFace = Bitmap.createScaledBitmap(croppedFace, 160, 160, false);
         FaceClassifier.Recognition recognition = classifier.recognizeImage(croppedFace, false);
-        Log.d("tryRecognition", recognition.getTitle()+" "+recognition.getDistance());
+        if (recognition != null)
+        {
+            Log.d("tryRecognition", recognition.getTitle()+" "+recognition.getDistance());
+            if(recognition.getDistance() < 0.7){
+                Paint p1 = new Paint();
+                p1.setTextSize(50);
+                p1.setColor(Color.RED);
+                canvas.drawText(recognition.getTitle(), bound.left, bound.top, p1);
+            }
+        }
     }
 
     //creates a temporary file for the image to be stored
